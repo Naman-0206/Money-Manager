@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from django.http import HttpResponse , HttpResponseRedirect
 from .models import *
-from datetime import datetime
+from datetime import datetime , timedelta
 from django.db.models import Sum
 
 
@@ -17,24 +17,42 @@ def home(request):
         amount = request.POST.get('amount')
         type = request.POST.get('type')
         print(user_id,information,amount,type)
-
-        model = Data(user = request.user)
-        model.info = information
-        model.date_time = datetime.now()
-        model.amount = amount
-        model.type=type
-        model.save()
+        if information and amount and type:
+            model = Data(user = request.user)
+            model.info = information.title()
+            model.date_time = datetime.now()
+            model.amount = amount
+            model.type=type.lower()
+            model.save()
 
 
     if request.user.is_authenticated:
-        data = Data.objects.filter(user=request.user)
-        debit = Data.objects.filter(user=request.user, type="debit").aggregate(total_amount=Sum('amount'))['total_amount']
-        credit = Data.objects.filter(user=request.user , type = "credit").aggregate(total_amount=Sum('amount'))['total_amount']
+        from_date = request.POST.get("from")
+        to_date = request.POST.get("to")
+        t_type = request.POST.get("t_type")
+        if (from_date == None) and (to_date == None):
+            from_date = datetime.now() - timedelta(days=30)
+            to_date = datetime.now()
+        print(from_date,to_date)
+
+
+        total = None
+        debit = None
+        credit = None
+        if t_type == "debit" or t_type == "credit" :
+            data = Data.objects.filter(user=request.user , date_time__gte=from_date , date_time__lte=to_date , type=t_type)
+            total = data.aggregate(total_amount=Sum('amount'))['total_amount']
+        else:  
+            data = Data.objects.filter(user=request.user , date_time__gte=from_date , date_time__lte=to_date )
+            debit = Data.objects.filter(user=request.user , date_time__gte=from_date , date_time__lte=to_date , type="debit").aggregate(total_amount=Sum('amount'))['total_amount']
+            credit = Data.objects.filter(user=request.user , date_time__gte=from_date , date_time__lte=to_date , type = "credit").aggregate(total_amount=Sum('amount'))['total_amount']
+        
         data = data.order_by('-date_time')[:15]
         context={
             "data" : data,
             "total_credit" : credit,
             "total_debit" : debit,
+            "total" : total,
             }
         return render(request, 'index.html' , context=context)
             
