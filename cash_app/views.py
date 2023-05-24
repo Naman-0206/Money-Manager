@@ -16,11 +16,12 @@ def home(request):
         information = request.POST.get('information')
         amount = request.POST.get('amount')
         type = request.POST.get('type')
+        date = request.POST.get('date')
         print(user_id,information,amount,type)
         if information and amount and type:
             model = Data(user = request.user)
             model.info = information.title()
-            model.date_time = datetime.now()
+            model.date_time = datetime.strptime(date, '%Y-%m-%dT%H:%M')
             model.amount = amount
             model.type=type.lower()
             model.save()
@@ -49,6 +50,7 @@ def home(request):
         
         data = data.order_by('-date_time')
         context={
+            'date':datetime.now().strftime('%Y-%m-%dT%H:%M'),
             "data" : data[:15],
             "total_credit" : credit,
             "total_debit" : debit,
@@ -56,7 +58,7 @@ def home(request):
             }
         return render(request, 'index.html' , context=context)
             
-    context={
+    context={ 'date':datetime.now(),
         }
     return render(request, 'index.html' , context=context)
 
