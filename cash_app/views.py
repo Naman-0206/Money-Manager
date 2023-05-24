@@ -47,9 +47,10 @@ def home(request):
             debit = Data.objects.filter(user=request.user , date_time__gte=from_date , date_time__lte=to_date , type="debit").aggregate(total_amount=Sum('amount'))['total_amount']
             credit = Data.objects.filter(user=request.user , date_time__gte=from_date , date_time__lte=to_date , type = "credit").aggregate(total_amount=Sum('amount'))['total_amount']
         
-        data = data.order_by('-date_time')[:15]
+        data = data.order_by('-date_time')
+        print(data)
         context={
-            "data" : data,
+            "data" : data[:15],
             "total_credit" : credit,
             "total_debit" : debit,
             "total" : total,
