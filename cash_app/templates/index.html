@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    {% extends "base.html" %}
+
+    {% block start %}
+    {% if user.is_authenticated %}
+    <div class="container mt-5 pt-5 col-6">
+        <form method="POST">
+            {% csrf_token %}
+            {%include "messages.html"%}
+            <div class="mb-3">
+                <label for="information" class="form-label">Information</label>
+                <input type="text" name="information" required class="form-control" id="information">
+            </div>
+            <div class="mb-3">
+                <label for="amount" class="form-label">Amount</label>
+                <input type="number" name="amount" class="form-control" id="amount" required>
+            </div>
+            <div class="mb-3">
+                <input type="radio" name="type" class="" value="debit" id="debit" required><label for="debit"
+                    class="form-label">Debit</label><br>
+                <input type="radio" name="type" class="" value="credit" id="credit" required><label for="credit"
+                    class="form-label">Credit</label>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Save</button>
+        </form>
+    </div>
+    {% endif %}
+
+
+    {% if data %}
+    Total credit: {{total_credit}}<br>
+    Total debit: {{total_debit}}
+    <table class="table">
+        <thead>
+            <tr>
+                <th>DATE</th>
+                <th>AMOUNT</th>
+                <th>TYPE</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in data %}
+            <tr>
+                <td>{{row.date_time}}</td>
+                <td>{{row.amount}}</td>
+                <td>{{row.type}}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+    {% endblock %}
+
+</body>
+
+</html>
