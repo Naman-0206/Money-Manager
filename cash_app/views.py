@@ -10,6 +10,10 @@ from django.db.models import Sum
 
 
 # Create your views here.
+def noneToZero(obj):
+    if obj==None:
+        return 0
+    return obj
 def home(request):
     return render(request , 'home.html')
 
@@ -41,9 +45,9 @@ def dashboard(request):
         print(from_date,to_date)
 
 
-        total = None
-        debit = None
-        credit = None
+        total = 0
+        debit = 0
+        credit = 0
         if t_type == "debit" or t_type == "credit" :
             data = Data.objects.filter(user=request.user , date_time__gte=from_date , date_time__lte=to_date , type=t_type)
             total = data.aggregate(total_amount=Sum('amount'))['total_amount']
@@ -51,13 +55,14 @@ def dashboard(request):
             data = Data.objects.filter(user=request.user , date_time__gte=from_date , date_time__lte=to_date )
             debit = Data.objects.filter(user=request.user , date_time__gte=from_date , date_time__lte=to_date , type="debit").aggregate(total_amount=Sum('amount'))['total_amount']
             credit = Data.objects.filter(user=request.user , date_time__gte=from_date , date_time__lte=to_date , type = "credit").aggregate(total_amount=Sum('amount'))['total_amount']
-        
+
         data = data.order_by('-date_time')
         context={
             'date':datetime.now().strftime('%Y-%m-%dT%H:%M'),
             "data" : data[:15],
-            "total_credit" : credit,
-            "total_debit" : debit,
+            "total_credit" : noneToZero(credit),
+            "total_debit" : noneToZero(debit),
+            "total_balance" : noneToZero(credit)-noneToZero(debit),
             "total" : total,
             }
         return render(request, 'dashboard.html' , context=context)
