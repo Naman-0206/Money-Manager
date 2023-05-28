@@ -2,9 +2,9 @@
 
 {%  block start %}
 
-<div class="container mt-5 pt-5 col-6">
-
-    <form method="POST">
+<div class="container col-md-3 mt-5 col-10 py-4 px-4 text-center" style="border-radius: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, .1), 0 8px 16px rgba(0, 0, 0, .1);">
+    <h4>Login to Rokda</h4>
+    <form method="POST" class="text-start pt-2">
         {% csrf_token %}
         {%include "messages.html"%}
         <div class="mb-3">
@@ -16,8 +16,10 @@
           <input type="password" name="password" class="form-control" id="exampleInputPassword1">
         </div>
         
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="submit" class="btn btn-primary col-12 my-2">Login</button>
       </form>
+    <div class="container my-2 col-6">or <a class="" href="{%url 'register_page'%}">Sign-up</a></div>
+
 </div>
 
 
