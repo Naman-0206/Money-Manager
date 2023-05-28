@@ -11,10 +11,7 @@ from django.db.models import Sum
 
 # Create your views here.
 def home(request):
-    if request.user.is_authenticated:
-        return redirect('dashboard')
-    else:
-        return render(request , 'home.html')
+    return render(request , 'home.html')
 
 def dashboard(request):
     user_id = request.user.id
@@ -119,8 +116,10 @@ def register_page(request):
         user.save()
 
         return redirect('/')
-
-    return render(request , 'register.html')
+    if not request.user.is_authenticated:
+        return render(request , 'register.html')
+    else:
+        return redirect("dashboard")
 
 def logout_page(request):
     logout(request)
