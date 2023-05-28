@@ -1,0 +1,119 @@
+<body>
+    {% extends "base.html" %}
+    {% block start %}
+    {% if user.is_authenticated %}
+    <div class="container visible my-3 mt-5">
+        <!-- Forms container -->
+
+        <div class="row visible mt-3 px-2">
+
+
+            <div class="col-md-6 visible  px-5 bg-secondary bg-gradient rounded"><!--Form 1 -->
+                <form method="POST">
+                    {% csrf_token %}
+                    {%include "messages.html"%}
+                    <div class="row my-3 visible">
+                        <div class="col-md-12  visible">
+                            <label for="information" class="form-label">Information</label>
+                            <input type="text" name="information" required class="form-control" id="information">
+                        </div>
+                    </div>
+                    <div class="row  visible">
+                        <div class="col-md-5 my-3 visible">
+                            <label for="amount" class="form-label ">Amount</label>
+                            <input type="number" name="amount" class="form-control " id="amount" required>
+                        </div>
+                        <div class="col-md-5 offset-md-2 my-3 visible">
+                            <label for="date" class="form-label">Date</label>
+                            <input type="datetime-local" name="date" class="form-control" id="date" value='{{date}}'
+                                autocomplete="on" required>
+                        </div>
+                    </div>
+                    <div class="row my-3 visible">
+                        <div class="col-4 visible">
+                            <input type="radio" name="type" class="form-check-input" value="debit" id="debit" required>
+                            <label for="debit" class="form-check-label">Debit</label><br>
+                            <input type="radio" name="type" class="form-check-input" value="credit" id="credit"
+                                required>
+                            <label for="credit" class="form-check-label">Credit</label>
+                        </div>
+                        <div class="col-3 offset-5 text-end visible">
+                            <button type="submit" class="btn btn-primary mt-2">Save</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+             <div class="col-md-5 offset-md-1 visible my-5 px-5 bg-secondary bg-gradient rounded"><!--Form 2 -->
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="row visible">
+                        <div class="col-md-6 my-3 visible">
+                            <label for="from" class="form-label">From</label>
+                            <input type="date" name="from" required class="form-control" id="from">
+                        </div>
+                        <div class="col-md-6 my-3 visible">
+                            <label for="to" class="form-label">To</label>
+                            <input type="date" name="to" required class="form-control" id="to">
+                        </div>
+                    </div>
+                    <div class="row my-3 visible">
+                        <div class="col-4 mb-0 visible">
+                            <label for="t_type" class="form-label">Type</label>
+                            <select name="t_type" id="t_type" class="form-select">
+                                <option value="all">ALL</option>
+                                <option value="debit">Debit</option>
+                                <option value="credit">Credit</option>
+                            </select>
+                        </div>
+                        <div class="col-3 offset-5 text-end visible">
+                            <button type="submit" class="btn btn-primary mt-4" id="go_btn">Go</button>
+                        </div>
+                    </div>
+                </form>
+
+
+            </div>
+        </div>
+    </div>
+
+
+
+
+    {% if data %}
+    {% if total %}
+    <h3>Total: {{total}}</h3>
+    {% else %}
+    <h3>Total credit: {{total_credit}}</h3>
+    <h3>Total debit: {{total_debit}}</h3>
+    {% endif %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th>DATE</th>
+                <th>INFO</th>
+                <th>AMOUNT</th>
+                <th>TYPE</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in data %}
+            <tr>
+                <td>{{row.date_time}}</td>
+                <td>{{row.info}}</td>
+                <td>{{row.amount}}</td>
+                <td>{{row.type}}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    NO DATA
+    {% endif %}
+    {% endif %}
+
+    {% endblock %}
+
+</body>
+
+</html>
