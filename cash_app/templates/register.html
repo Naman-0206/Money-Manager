@@ -1,39 +1,73 @@
 {% extends "base.html" %}
 
-{%  block start %}
+{% block start %}
 
-<div class="container mt-5 pt-5 col-6">
+<div class="container col-10 col-md-4 px-4 py-2 mt-2  visible" style="border-radius: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, .1), 0 8px 16px rgba(0, 0, 0, .1);">
+  <div class="text-center my-3"><h4>Create Account</h4></div>
+  <form method="POST" class="">
+    {% csrf_token %}
 
-    <form method="POST">
-        {% csrf_token %}
+      {%include "messages.html"%}
 
-        {%include "messages.html"%}
+    <div class="row ">
+      <div class="col-md-6 mb-3">
+        <label for="first_name" class="form-label">First name </label>
+        <input type="text" name="first_name" required class="form-control" id="first_name" {% if first_name %}
+          value={{first_name}} {% endif %}>
+      </div>
+      <div class="col-md-6 mb-3">
+        <label for="last_name" class="form-label">Last name</label>
+        <input type="text" name="last_name" required class="form-control" id="last_name" {% if last_name %}
+          value={{last_name}} {% endif %}>
+      </div>
+    </div>
+    <div class="row mb-3 ">
+      <div>
+        <label for="email" class="form-label">Email address</label>
+        <input type="email" name="email" required class="form-control" id="email" {% if email %} value={{email}} {% endif %}>
+        <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+      </div>
+    </div>
+    <div class="row my-3">
+      <div>
+        <label for="username" class="form-label">Username</label>
+        <input type="text" name="username" required class="form-control" id="username">
+      </div>
+    </div>
+    <div class="row my-3">
+      <div class="">
+        <label for="password" class="form-label">Password</label>
+        <input type="password" name="password" class="form-control" id="password">
+      </div>
+    </div>
+    <div class="row my-3">
+      <div class="">
+        <label for="confirmPassword" class="form-label">Confirm Password</label>
+        <input type="password" name="password" class="form-control" id="confirmPassword">
+        <small id="passwordError" class="form-text text-danger"></small>
+      </div>
+    </div>
 
-        <div class="mb-3">
-          <label for="first_name" class="form-label">First name </label>
-          <input type="text" name="first_name" required class="form-control" id="first_name" {% if first_name %} value ={{first_name}} {% endif %}>
-        </div>
-        <div class="mb-3">
-          <label for="last_name" class="form-label">Last name</label>
-          <input type="text" name="last_name" required class="form-control" id="last_name"{% if last_name %} value ={{last_name}} {% endif %}>
-        </div>
-        <div class="mb-3">
-          <label for="email" class="form-label">Email address</label>
-          <input type="email" name="email" required class="form-control" id="email" {% if email %} value ={{email}} {% endif %}>
-          <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
-        </div>
-        <div class="mb-3">
-          <label for="username" class="form-label">Username</label>
-          <input type="text" name="username" required class="form-control" id="username">
-        </div>
-        <div class="mb-3">
-          <label for="exampleInputPassword1" class="form-label">Password</label>
-          <input type="password" name="password" class="form-control" id="exampleInputPassword1">
-        </div>
-        
-        <button type="submit" class="btn btn-primary">Submit</button>
-    </form>
+    <div class="text-center"><button type="submit" class="btn btn-primary text-center">Create Account</button></div>
+  </form>
+  <div class="text-center my-2">or <a class="" href="{%url 'login_page'%}">Login</a></div>
 </div>
 
+<script>
+  document.querySelector('form').addEventListener('submit', function (event) {
+    event.preventDefault(); // Prevent form submission
 
-{% endblock %}
+    var password = document.getElementById('password').value;
+    var confirmPassword = document.getElementById('confirmPassword').value;
+    var passwordError = document.getElementById('passwordError');
+
+    if (password !== confirmPassword) {
+      passwordError.textContent = 'Passwords do not match';
+    } else {
+      // Passwords match, proceed with form submission
+      this.submit();
+    }
+  });
+</script>
+
+{%endblock%}
