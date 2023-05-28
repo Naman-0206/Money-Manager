@@ -11,7 +11,14 @@ from django.db.models import Sum
 
 # Create your views here.
 def home(request):
+    if request.user.is_authenticated:
+        return redirect('dashboard')
+    else:
+        return render(request , 'home.html')
+
+def dashboard(request):
     user_id = request.user.id
+
     if request.method == 'POST':
         information = request.POST.get('information')
         amount = request.POST.get('amount')
@@ -56,11 +63,7 @@ def home(request):
             "total_debit" : debit,
             "total" : total,
             }
-        return render(request, 'index.html' , context=context)
-            
-    context={ 'date':datetime.now(),
-        }
-    return render(request, 'index.html' , context=context)
+        return render(request, 'dashboard.html' , context=context)
 
 def login_page(request):
     if request.method == 'POST':
@@ -86,7 +89,7 @@ def login_page(request):
     if not request.user.is_authenticated:
         return render(request ,'login.html')
     else:
-        return redirect("home")
+        return redirect("dashboard")
 
 
 def register_page(request):
