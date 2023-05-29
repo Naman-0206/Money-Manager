@@ -27,6 +27,14 @@
     <br />
     {% if user.is_authenticated %}
     <div class="container my-2 ">
+        {% if not total %}
+        <div class="row text-center my-5 py-4 mx-1 bg-light bg-gradient"
+            style="border-radius: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, .1), 0 8px 16px rgba(0, 0, 0, .1);">
+            <h3 class="col-10 col-md-4">Liquidty: {{total_credit}}</h3>
+            <h3 class="col-10 col-md-4">Expense: {{total_debit}}</h3>
+            <h3 class="col-10 col-md-4">Balance: {{total_balance}}</h3>
+        </div>
+        {% endif %}
         <!-- Forms container -->
 
         <div class="row mt-2 px-2">
@@ -108,14 +116,7 @@
 
 
         {% if data %}
-            {% if not total %}
-            <div class="row text-center my-5 py-4 mx-1 bg-light bg-gradient"
-                style="border-radius: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, .1), 0 8px 16px rgba(0, 0, 0, .1);">
-                <h3 class="col-10 col-md-4">Liquidty: {{total_credit}}</h3>
-                <h3 class="col-10 col-md-4">Expense: {{total_debit}}</h3>
-                <h3 class="col-10 col-md-4">Balance: {{total_balance}}</h3>
-            </div>
-            {% endif %}
+
 
 
             <div class="row text-center my-5 mx-1 px-2  bg-light bg-gradient"
